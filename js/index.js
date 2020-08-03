@@ -75,21 +75,6 @@ window.onload = init
 // } 
 // firebase.firestore().collection('users').doc(documentIdUpdate).update(dataUpdate)
 
-
-
-// addMessage = async () => {
-//   const documentID = `
-//     MPH1soyWWx8ZYHyBGSZA
-//     `
-//   const messageUpdate = {
-//     Messages = firebase.firestore.FieldValue.arrayUnion(message)
-//   }
-//   await firebase.firestore().collection('Conversations').doc(documentID).update(messageUpdate)
-
-// }
-
-
-
 // delete document 
 //   const docToDelete = 'Vc8YOpR96mWPFyxhExhR'
 //   firebase.firestore().collection('users').doc(docToDelete).delete()
