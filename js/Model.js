@@ -18,16 +18,16 @@ model.register = (data) => {
 model.login = async (dataLogin) => {
     try{
     const response = await firebase.auth().signInWithEmailAndPassword(dataLogin.email , dataLogin.password)
-    console.log(response)
-    if(response.user.emailVerified === false){
-        alert('Please verify your email')
-    } else {
-        model.currentUser = {
-            displayName: response.user.displayName,
-            email: response.user.email
-        }
-        view.setActiveScreen('chatScreen')
-    }
+    // console.log(response)
+    // if(response.user.emailVerified === false){
+    //     alert('Please verify your email')
+    // } else {
+    //     model.currentUser = {
+    //         displayName: response.user.displayName,
+    //         email: response.user.email
+    //     }
+    //     view.setActiveScreen('chatScreen')
+    // }
     } catch(err){
         console.log(err)
         alert(err.message)

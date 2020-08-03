@@ -1,9 +1,7 @@
 const view = {}
 view.setActiveScreen = (screenName) => {
     switch (screenName) {
-        case 'welcomeScreen':
-            document.getElementById(`app`).innerHTML = components.welcomeScreen
-            break;
+
         // in ra man hinh register
         case 'registerScreen':
             document.getElementById('app').innerHTML = components.registerScreen
@@ -58,6 +56,13 @@ view.setActiveScreen = (screenName) => {
             sendMessageForm.addEventListener('submit', (event) => {
                 event.preventDefault()
                 // Định nghĩa tin nhắn
+                // if(sendMessageForm.message.value !== " "){
+                //     const message = {
+                //         content: sendMessageForm.message.value,
+                //         owner: model.currentUser.email // dung cho mine
+                //     }
+                //     view.addMessage(message)
+                // }
                 const message = {
                     content: sendMessageForm.message.value,
                     owner: model.currentUser.email // dung cho mine
@@ -70,11 +75,18 @@ view.setActiveScreen = (screenName) => {
                 if (message.content == '' || !reg.test(message.content)) {
                     sendMessageForm.message.value = '';
                 } else {
-                    view.addMessage(message, data);
-                    view.addMessage(botMsg, data);
+                    view.addMessage(message);
+                    view.addMessage(botMsg);
                 }
-                
-                // sendMessageForm.message.value = '';
+
+                sendMessageForm.message.value = '';
+
+                // add user message in firebase
+                const documentId = "MPH1soyWWx8ZYHyBGSZA"
+                const addMessage = {
+                    Messages: firebase.firestore.FieldValue.arrayUnion(message)
+                }
+                firebase.firestore().collection("Conversations").doc(documentId).update(addMessage)
             });
             break;
 
