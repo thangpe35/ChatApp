@@ -56,7 +56,7 @@ view.setActiveScreen = (screenName) => {
             sendMessageForm.addEventListener('submit', (event) => {
                 event.preventDefault()
                 // Định nghĩa tin nhắn
-                // if(sendMessageForm.message.value !== " "){
+                // if(sendMessageForm.message.value.trim() !== " "){
                 //     const message = {
                 //         content: sendMessageForm.message.value,
                 //         owner: model.currentUser.email // dung cho mine
@@ -65,29 +65,27 @@ view.setActiveScreen = (screenName) => {
                 // }
                 const message = {
                     content: sendMessageForm.message.value,
-                    owner: model.currentUser.email // dung cho mine
-                }
-                const botMsg = {
-                    content: sendMessageForm.message.value,
-                    owner: 'bot'
+                    owner: model.currentUser.email, // dung cho mine
+                    createdAd: new Date().toISOString()
                 }
                 const reg = /\S/g; // tat ca cac khoang trang
                 if (message.content == '' || !reg.test(message.content)) {
                     sendMessageForm.message.value = '';
                 } else {
-                    view.addMessage(message);
-                    view.addMessage(botMsg);
+                    model.addMessage(message);
+                    
                 }
-
                 sendMessageForm.message.value = '';
-
                 // add user message in firebase
-                const documentId = "MPH1soyWWx8ZYHyBGSZA"
-                const addMessage = {
-                    Messages: firebase.firestore.FieldValue.arrayUnion(message)
-                }
-                firebase.firestore().collection("Conversations").doc(documentId).update(addMessage)
+                // const documentId = "MPH1soyWWx8ZYHyBGSZA"
+                // const addMessage = {
+                //     Messages: firebase.firestore.FieldValue.arrayUnion(message)
+                // }
+                // firebase.firestore().collection("Conversations").doc(documentId).update(addMessage)
             });
+
+            model.loadConversations()
+            model.listenConversationsChange()
             break;
 
     }
@@ -114,4 +112,18 @@ view.addMessage = (message) => {
         `
     }
     document.querySelector('.list-messages').appendChild(messageWrapper)
+}
+
+view.showCurrentConversation = () => {
+    // doi ten cuoc tro chuyen
+    document.getElementsByClassName('conversation-header')[0].innerText = model.currentConversation.title
+    // in cac tin nhan len man hinh
+    for(message of model.currentConversation.Messages){
+        view.addMessage(message)
+    }
+    view.scrollToEndElement()
+}
+view.scrollToEndElement = () => {
+    const element = document.querySelector('.list-messages')
+    element.scrollTop = element.scrollHeight
 }
