@@ -19,10 +19,24 @@
     background-color: #037BFE;
     border-radius: 5px;
     cursor: pointer;
+    /* border: none; */
 }
 .error{
     color: #ff0000;
 }
 .form-action{
     cursor: pointer;
+}
+.header{
+    text-align: center;
+    background-color: #037BFE;
+    height: 64px;
+    line-height: 64px;
+    color: #fff;
+    font-size: 28px;
+}
+.btn-light{
+    background: none;
+    color: #333;   
+    
 }

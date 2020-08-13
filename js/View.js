@@ -1,5 +1,5 @@
 const view = {}
-view.setActiveScreen = (screenName) => {
+view.setActiveScreen = (screenName, fromCreateConversation = false) => {
     switch (screenName) {
 
         // in ra man hinh register
@@ -8,7 +8,7 @@ view.setActiveScreen = (screenName) => {
             const registerForm = document.getElementById('register-form')
 
             registerForm.addEventListener('submit', (event) => {
-                event.preventDefault()  // ko cho trinh duyet load lai
+                event.preventDefault()  // ko cho trinh duyet load lai , chi dung cho submit
                 const data = {
                     // lay du lieu nguoi dung
                     firstName: registerForm.firstName.value,
@@ -73,7 +73,7 @@ view.setActiveScreen = (screenName) => {
                     sendMessageForm.message.value = '';
                 } else {
                     model.addMessage(message);
-                    
+
                 }
                 sendMessageForm.message.value = '';
                 // add user message in firebase
@@ -84,8 +84,36 @@ view.setActiveScreen = (screenName) => {
                 // firebase.firestore().collection("Conversations").doc(documentId).update(addMessage)
             });
 
-            model.loadConversations()
-            model.listenConversationsChange()
+            if (!fromCreateConversation) {
+                model.loadConversations()
+                model.listenConversationsChange()
+            } else {
+                view.showConversation()
+                view.showCurrentConversation()
+            }
+            document.querySelector('.create-conversation .btn').addEventListener('click', () => {
+                view.setActiveScreen('createConversation')
+            });
+            break;
+        case 'createConversation':
+            document.getElementById('app').innerHTML = components.createConversation
+            const backToChat = document.getElementById('back-to-chat')
+            backToChat.addEventListener('click', () => {
+                view.setActiveScreen('chatScreen', true)
+            })
+            const createConversation = document.getElementById('create-conversation-form')
+            createConversation.addEventListener('submit', (event) => {
+                event.preventDefault()
+                const newConversation = {
+                    conversationTitle: createConversation.conversationTitle.value,
+                    conversationEmail: createConversation.conversationEmail.value
+                }
+                
+                Controller.createConversationScreen(newConversation)
+                firebase.firestore().collection('Conversations').add(newConversation)
+            })
+            
+            model.addDocument(newConversation)
             break;
 
     }
@@ -115,10 +143,11 @@ view.addMessage = (message) => {
 }
 
 view.showCurrentConversation = () => {
+    document.querySelector('.list-messages').innerHTML = ''
     // doi ten cuoc tro chuyen
     document.getElementsByClassName('conversation-header')[0].innerText = model.currentConversation.title
     // in cac tin nhan len man hinh
-    for(message of model.currentConversation.Messages){
+    for (message of model.currentConversation.Messages) {
         view.addMessage(message)
     }
     view.scrollToEndElement()
@@ -126,4 +155,33 @@ view.showCurrentConversation = () => {
 view.scrollToEndElement = () => {
     const element = document.querySelector('.list-messages')
     element.scrollTop = element.scrollHeight
+}
+view.showConversation = () => {
+    for (oneConversation of model.conversations) {
+        view.addConversation(oneConversation)
+    }
+}
+view.addConversation = (conversation) => {
+
+    const conversationWrapper = document.createElement('div')
+    // conversationWrapper.classList.add(['conversation', 'cursor-pointer'])
+    conversationWrapper.className = 'conversation', 'cursor-pointer'
+    if (model.currentConversation.id === conversation.id) {
+        conversationWrapper.classList.add('current')
+    }
+    conversationWrapper.innerHTML = `
+    <div class="conversation-title">${conversation.title}</div>
+    <div class="conversation-num-user">${conversation.users.length} user</div>
+
+    `
+    conversationWrapper.addEventListener('click', () => {
+        // thay doi giao dien , doi current
+        document.querySelector('.current').classList.remove('current')
+        conversationWrapper.classList.add('current')
+        // thay doi model.currentConversation
+        model.currentConversation = conversation
+        // in cac tin nhan cua model.currentConversation len man hinh
+        view.showCurrentConversation()
+    })
+    document.querySelector('.list-conversation').appendChild(conversationWrapper)
 }

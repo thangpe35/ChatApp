@@ -52,3 +52,15 @@ Controller.chatScreen = (dataChatScreen) =>{
         model.chatScreen(dataChatScreen)
     }
 }
+Controller.createConversationScreen = (newConversation) => {
+    if(newConversation.conversationTitle.trim() === ''){
+        document.getElementById('conversation-name-error').innerText = 'Please input conversation Name'
+    } else {
+        document.getElementById('conversation-name-error').innerText = ''
+    }
+    if(newConversation.conversationEmail.trim() === ''){
+        document.getElementById('conversation-email-error').innerText = 'Please inpput conversation Email'
+    } else {
+        document.getElementById('conversation-email-error').innerText = ''
+    }
+}
