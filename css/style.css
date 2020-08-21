@@ -19,7 +19,7 @@
     background-color: #037BFE;
     border-radius: 5px;
     cursor: pointer;
-    /* border: none; */
+    border: none;
 }
 .error{
     color: #ff0000;

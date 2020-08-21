@@ -81,7 +81,7 @@ components.chatScreen = `
     Mindx Chat
 </div>
 <div class="main">
-    <div class="aside-left">
+    <div class="aside-left ">
         <div class="create-conversation">
             <button class="btn">+ New conversation</button>
         </div>
@@ -104,6 +104,18 @@ components.chatScreen = `
                 <input type="text" placeholder="Type a message" name="message">
             </div>
             <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+        </form>
+    </div>
+    <div class="aside-right">
+        <div class="list-user">
+            
+        </div>
+        <form id="add-user-form">
+            <div class="input-wrapper">
+                <input type="text" placeholder="Input friend email" name="email">
+                <div class="error" id="add-user-email-error"></div>
+            </div>
+            <button class="btn" type="submit">Save</button>
         </form>
     </div>
 </div>
